@@ -4,7 +4,10 @@ import requests
 import sqlite3
 import python_jwt as jwt, Crypto.PublicKey.RSA as RSA, datetime, time
 from flask import Flask, jsonify
+from flask_cors import CORS
+
 app = Flask(__name__)
+CORS(app)
 
 key = RSA.generate(2048)
 payload = { 'foo': 'bar', 'wup': 90 };
@@ -20,27 +23,27 @@ print('Your IP is {0}'.format(response.json()['origin']))
 #timestamp
 timestamp = time.mktime(datetime.datetime.now().timetuple())
 
-#创建SSH对象
-ssh = paramiko.SSHClient()
+# #创建SSH对象
+# ssh = paramiko.SSHClient()
+#
+# #把要连接的机器添加到known_hosts文件中
+# ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+#
+# #连接服务器
+# ssh.connect(hostname='', port=22, username='root', password='')
+#
+# memCmd = 'ls'
+# #cmd = 'ls -l;ifconfig'       #多个命令用;隔开
+# stdin, stdout, stderr = ssh.exec_command(memCmd)
+#
+# memResult = stdout.read()
+#
+# if not memResult:
+#     memResult = stderr.read()
+# ssh.close()
 
-#把要连接的机器添加到known_hosts文件中
-ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+# print(memResult.decode())
 
-#连接服务器
-ssh.connect(hostname='', port=22, username='root', password='')
-
-memCmd = 'ls'
-#cmd = 'ls -l;ifconfig'       #多个命令用;隔开
-stdin, stdout, stderr = ssh.exec_command(memCmd)
-
-memResult = stdout.read()
-
-if not memResult:
-    memResult = stderr.read()
-ssh.close()
-
-print(memResult.decode())
-
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def hello_world():
     return jsonify({ 'status': 1 })
