@@ -1,10 +1,10 @@
 #coding=utf-8
-# import MySQLdb
 import paramiko
-import time
 import requests
 import sqlite3
-import python_jwt as jwt, Crypto.PublicKey.RSA as RSA, datetime
+import python_jwt as jwt, Crypto.PublicKey.RSA as RSA, datetime, time
+from flask import Flask, jsonify
+app = Flask(__name__)
 
 key = RSA.generate(2048)
 payload = { 'foo': 'bar', 'wup': 90 };
@@ -40,29 +40,7 @@ if not memResult:
 ssh.close()
 
 print(memResult.decode())
-#
-# conn= MySQLdb.connect(
-#         host='localhost',
-#         port = 3306,
-#         user='root',
-#         passwd='test123',
-#         db ='test54',
-#         )
-# cur = conn.cursor()
-#
-# #创建数据表
-# #创建数据表
-# #cur.execute("create table meminfo(id int ,timestamp varchar(30),used varchar(20))")
-#
-# #插入一条数据
-# #cur.execute("insert into meminfo values('1','%s','%s')" % (memResult,timestamp))
-#
-# #修改查询条件的数据
-# #cur.execute("update meminfo set used='0' where id = 0")
-#
-# #删除查询条件的数据
-# #cur.execute("delete from meminfo")
-#
-# cur.close()
-# conn.commit()
-# conn.close()
+
+@app.route('/')
+def hello_world():
+    return jsonify({ 'status': 1 })
