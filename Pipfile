@@ -5,8 +5,8 @@ verify_ssl = true
 [packages]
 paramiko = "*"
 requests = "*"
-python-jwt = "*"
 pycrypto = "*"
 flask = "*"
 flask-cors = "*"
 sqlalchemy = "*"
+flask-jwt = "*"

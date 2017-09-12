@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "57617b2aa11047804726fe5decd70f1ecc679fc777f0d1162e8878f495958850"
+            "sha256": "18fa8d1f2e7c33966d97e709a9678c48735c80cf75007c906235e70cec106ede"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -186,6 +186,12 @@
             ],
             "version": "==3.0.3"
         },
+        "flask-jwt": {
+            "hashes": [
+                "sha256:49c0672fbde0f1cd3374bd834918d28956e3c521c7e00089cdc5380d323bd0ad"
+            ],
+            "version": "==0.3.2"
+        },
         "idna": {
             "hashes": [
                 "sha256:8c7309c718f94b3a625cb648ace320157ad16ff131ae0af362c9f21b80ef6ec4",
@@ -205,15 +211,6 @@
                 "sha256:ddaa01a212cd6d641401cb01b605f4a4d9f37bfc93043d7f760ec70fb99ff9ff"
             ],
             "version": "==2.9.6"
-        },
-        "jws": {
-            "hashes": [
-                "sha256:8f9c25d7022a9592fe4766612db729e7f5ee2afbc8d409108ef11f26b0aa94b6",
-                "sha256:6f48d610bbd0d6974ce0c010a6ce0438d3fa87539e68c5e21ea28d29a8df0e57",
-                "sha256:1c435117e2f6842e74e9a167df58cbab20f36aa14996ccbc81b7aded2f09a704",
-                "sha256:0e3d4cb06ae7c5c1d16d357b4e7acb5c5ecab0cccb3a4b998035b85052488053"
-            ],
-            "version": "==0.1.3"
         },
         "markupsafe": {
             "hashes": [
@@ -257,6 +254,13 @@
             ],
             "version": "==2.6.1"
         },
+        "pyjwt": {
+            "hashes": [
+                "sha256:99fe612dbe5f41e07124d9002c118c14f3ee703574ffa9779fee78135b8b94b6",
+                "sha256:87a831b7a3bfa8351511961469ed0462a769724d4da48a501cb8c96d1e17f570"
+            ],
+            "version": "==1.4.2"
+        },
         "pynacl": {
             "hashes": [
                 "sha256:9558ef5c1ae45322c054d1d1151016e0463b4da8b5c746a675e99c5c7d8f4faa",
@@ -289,13 +293,6 @@
                 "sha256:32f52b754abf07c319c04ce16905109cab44b0e7f7c79497431d3b2000f8af8c"
             ],
             "version": "==1.1.2"
-        },
-        "python-jwt": {
-            "hashes": [
-                "sha256:147634445f3a2001d574b964a7597099aeb62841de360388399ba28e3bc10122",
-                "sha256:8d02f4009464844dfe580ccf20e0b9e44638282bc36030136c3e2acf71616cb4"
-            ],
-            "version": "==2.0.2"
         },
         "requests": {
             "hashes": [
