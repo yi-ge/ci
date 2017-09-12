@@ -1,13 +1,15 @@
 #coding=utf-8
 import paramiko
 import requests
-import sqlite3
 import python_jwt as jwt, Crypto.PublicKey.RSA as RSA, datetime, time
+from sqlalchemy import create_engine
 from flask import Flask, jsonify
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
+
+engine = create_engine('sqlite:///:memory:', echo=True)
 
 key = RSA.generate(2048)
 payload = { 'foo': 'bar', 'wup': 90 };

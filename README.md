@@ -1,12 +1,22 @@
-最简持续集成服务器管理系统
-==========================
+Continuous Integration System
+=============================
 
-Python 依赖版本：3.6.2
+This is a basic continuous integration server, designed for GitHub and GitLab.
 
-### 安装虚拟环境（可选）
+Python Versions
+---------------
+
+The System is tested under Python 3.6.2.
+
+Installing
+----------
+
+### Virtualenv And Virtualenvwrapper (Option)
+
+To install globally with pip (if you have pip 1.3 or greater installed globally):
 
 ```
-$ sudo pip install virtualenv virtualenvwrapper
+$ [sudo] pip install virtualenv virtualenvwrapper
 ```
 
 It will probably install virtualenv on your system. Maybe it’s even in your package manager.
@@ -17,7 +27,7 @@ If you use Ubuntu, try:
 $ sudo apt-get install python-virtualenv virtualenvwrapper
 ```
 
-MAC在`~/.bash_profile`（Ubuntu等Linux系统在`~/.bashrc`）文件中添加以下代码：
+Add three lines to your shell startup file (MAC in `~/.bash_profile`, Ubuntu in `~/.bashrc`, etc.) to set the location where the virtual environments should live, the location of your development project directories, and the location of the script installed with this package:
 
 ```
 export WORKON_HOME=$HOME/WorkStation
@@ -26,46 +36,44 @@ mkdir -p $WORKON_HOME
 source /usr/local/bin/virtualenvwrapper.sh
 ```
 
-然后`source ~/.bash_profile`或者`source ~/.bashrc`。
+After editing it, reload the startup file (e.g., run `source ~/.bashrc`).
 
-**常用命令：**
+**You can use：**
 
 ```
-workon # 列出已有环境
-workon XXX # 进入XXX环境
-mkvirtualenv XXX # 创建XXX环境
-deactivate XXX # 退出XXX环境
-rmvirtualenv XXX # 删除XXX环境
+workon # list virtual environment
+workon XXX # enter virtual environment
+mkvirtualenv XXX # set up virtual environment
+deactivate XXX # leave virtual environment
+rmvirtualenv XXX # delete virtual environment
 ```
 
-Ps：如果你嫌虚拟环境麻烦，也可以试试用[p](https://github.com/qw3rtman/p)或[pyenv](https://github.com/pyenv/pyenv)。需要注意的是，目前p不支持对pip的管理。
+Ps：You may try [p](https://github.com/qw3rtman/p) or [pyenv](https://github.com/pyenv/pyenv). It is important that `p` does not support to manage `pip`.
 
-### 安装基础工具pipenv
+### Install Pipenv
 
-需事先安装Python3.6.2
-
-如果没有安装上述虚拟环境：
+Pipenv: Sacred Marriage of Pipfile, Pip, & Virtualenv.
 
 ```
 $ pip install --user pipenv
 ```
 
-如果已经安装则进入项目目录执行：
+or
 
 ```
 $ mkvirtualenv -p python3 ci
 $ pip install pipenv
 ```
 
-### 安装依赖
+### Installation Dependency
 
 ```
 $ pipenv install
 ```
 
-### 运行应用程序
+### Run Server
 
 ```
 $ export FLASK_APP=manage.py
-$ flask run --host=0.0.0.0
+$ flask run --host=0
 ```
