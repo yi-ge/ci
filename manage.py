@@ -82,7 +82,7 @@ def hello_world():
 def login():
     if valid_login(request.form['username'],
         request.form['password']):
-        token = encode_auth_token('test', request.form['username'], datetime.datetime.utcnow())
+        token = encode_auth_token('test', request.form['username'], datetime.timedelta(seconds=10))
         print(token)
         print('开始解码')
         # print(jwt.decode(token, 'SECRET_KEY', leeway=10, algorithms=['HS256']))
