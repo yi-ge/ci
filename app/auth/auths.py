@@ -67,7 +67,7 @@ class Auth():
                 userInfo.login_time = login_time
                 Users.update(Users)
                 token = self.encode_auth_token(userInfo.id, login_time)
-                return jsonify(common.trueReturn(token.decode(), '登录成功'))
+                return jsonify(common.trueReturn({'token': token.decode()}, '登录成功'))
             else:
                 return jsonify(common.falseReturn(50004, '', '密码不正确'))
 
@@ -79,7 +79,7 @@ class Auth():
         auth_header = request.headers.get('Authorization')
         if (auth_header):
             auth_tokenArr = auth_header.split(" ")
-            if (not auth_tokenArr or auth_tokenArr[0] != 'JWT' or len(auth_tokenArr) != 2):
+            if (not auth_tokenArr or auth_tokenArr[0] != 'Bearer' or len(auth_tokenArr) != 2):
                 result = common.falseReturn(50101, '', '请传递正确的验证头信息')
             else:
                 auth_token = auth_tokenArr[1]

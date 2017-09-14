@@ -58,3 +58,35 @@ def init_api(app):
             }
             result = common.trueReturn(returnUser, "请求成功")
         return jsonify(result)
+
+    @app.route('/public/user/dereplication', methods=['POST'])
+    def dereplication():
+        """
+        Dereplication
+        :return: json
+        """
+        content = request.get_json(silent=True)
+        result = {}
+        if (content['type'] == 'phone'):
+            phone = content['phone']
+            user = Users.query.filter_by(phone=phone).first()
+            if (user is None):
+                result = common.trueReturn('', "请求成功")
+            else:
+                result = common.falseReturn(2, '', "手机号已存在")
+        elif (content['type'] == 'email'):
+            email = content['email']
+            user = Users.query.filter_by(email=email).first()
+            if (user is None):
+                result = common.trueReturn('', "请求成功")
+            else:
+                result = common.falseReturn(2, '', "Email已存在")
+        elif (content['type'] == 'username'):
+            username = content['username']
+            user = Users.query.filter_by(username=username).first()
+            if (user is None):
+                result = common.trueReturn('', "请求成功")
+            else:
+                result = common.falseReturn(2, '', "用户名已存在")
+
+        return jsonify(result)
