@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "18fa8d1f2e7c33966d97e709a9678c48735c80cf75007c906235e70cec106ede"
+            "sha256": "ab9e333966b00fbb6e2f2405a0be529f4820cdf7b2b8d7751d0712315c8b2539"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -186,12 +186,6 @@
             ],
             "version": "==3.0.3"
         },
-        "flask-jwt": {
-            "hashes": [
-                "sha256:49c0672fbde0f1cd3374bd834918d28956e3c521c7e00089cdc5380d323bd0ad"
-            ],
-            "version": "==0.3.2"
-        },
         "idna": {
             "hashes": [
                 "sha256:8c7309c718f94b3a625cb648ace320157ad16ff131ae0af362c9f21b80ef6ec4",
@@ -256,10 +250,10 @@
         },
         "pyjwt": {
             "hashes": [
-                "sha256:99fe612dbe5f41e07124d9002c118c14f3ee703574ffa9779fee78135b8b94b6",
-                "sha256:87a831b7a3bfa8351511961469ed0462a769724d4da48a501cb8c96d1e17f570"
+                "sha256:a4e5f1441e3ca7b382fd0c0b416777ced1f97c64ef0c33bfa39daf38505cfd2f",
+                "sha256:500be75b17a63f70072416843dc80c8821109030be824f4d14758f114978bae7"
             ],
-            "version": "==1.4.2"
+            "version": "==1.5.3"
         },
         "pynacl": {
             "hashes": [
