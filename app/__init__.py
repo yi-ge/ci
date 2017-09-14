@@ -17,10 +17,10 @@ def create_app(config_filename):
                 response.headers['Access-Control-Allow-Headers'] = headers
         return response
 
-    from app.users.model import db
+    from app.user.model import db
     db.init_app(app)
 
-    from app.users.api import init_api
+    from app.user.api import init_api
     init_api(app)
 
     return app
