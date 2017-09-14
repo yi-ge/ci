@@ -1,7 +1,8 @@
 Continuous Integration System
 =============================
 
-This is a basic continuous integration server, designed for GitHub and GitLab.
+This is a basic continuous integration server, designed for GitHub and GitLab.  
+The program use together with https://github.com/yi-ge/ci-web or http://git.oschina.net/mgenius/ci-web.
 
 Python Versions
 ---------------
@@ -74,6 +75,5 @@ $ pipenv install
 ### Run Server
 
 ```
-$ export FLASK_APP=manage.py
-$ flask run --host=0
+$ python run.py
 ```
