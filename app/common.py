@@ -8,9 +8,9 @@ def trueReturn(data, msg):
     }
 
 
-def falseReturn(data, msg):
+def falseReturn(code, data, msg):
     return {
-        "status": 50000,
+        "status": code,
         "result": {
             "data": data,
             "msg": msg

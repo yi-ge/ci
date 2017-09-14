@@ -60,7 +60,7 @@ class Auth():
         """
         userInfo = Users.query.filter_by(username=username).first()
         if (userInfo is None):
-            return jsonify(common.falseReturn('', '找不到用户'))
+            return jsonify(common.falseReturn(50003, '', '找不到用户'))
         else:
             if (Users.check_password(Users, userInfo.password, password)):
                 login_time = int(time.time())
@@ -69,7 +69,7 @@ class Auth():
                 token = self.encode_auth_token(userInfo.id, login_time)
                 return jsonify(common.trueReturn(token.decode(), '登录成功'))
             else:
-                return jsonify(common.falseReturn('', '密码不正确'))
+                return jsonify(common.falseReturn(50004, '', '密码不正确'))
 
     def identify(self, request):
         """
@@ -80,21 +80,21 @@ class Auth():
         if (auth_header):
             auth_tokenArr = auth_header.split(" ")
             if (not auth_tokenArr or auth_tokenArr[0] != 'JWT' or len(auth_tokenArr) != 2):
-                result = common.falseReturn('', '请传递正确的验证头信息')
+                result = common.falseReturn(50101, '', '请传递正确的验证头信息')
             else:
                 auth_token = auth_tokenArr[1]
                 payload = self.decode_auth_token(auth_token)
                 if not isinstance(payload, str):
                     user = Users.get(Users, payload['data']['id'])
                     if (user is None):
-                        result = common.falseReturn('', '找不到该用户信息')
+                        result = common.falseReturn(50005, '', '找不到该用户信息')
                     else:
                         if (user.login_time == payload['data']['login_time']):
                             result = common.trueReturn(user.id, '请求成功')
                         else:
-                            result = common.falseReturn('', 'Token已更改，请重新登录获取')
+                            result = common.falseReturn(50102, '', 'Token已更改，请重新登录获取')
                 else:
-                    result = common.falseReturn('', payload)
+                    result = common.falseReturn(50103, '', payload)
         else:
-            result = common.falseReturn('', '没有提供认证token')
+            result = common.falseReturn(50104, '', '没有提供认证token')
         return result

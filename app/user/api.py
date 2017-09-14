@@ -24,7 +24,7 @@ def init_api(app):
             }
             return jsonify(common.trueReturn(returnUser, "用户注册成功"))
         else:
-            return jsonify(common.falseReturn('', '用户注册失败'))
+            return jsonify(common.falseReturn(50001, '', '用户注册失败'))
 
 
     @app.route('/login', methods=['POST'])
@@ -36,7 +36,7 @@ def init_api(app):
         username = request.form.get('username')
         password = request.form.get('password')
         if (not username or not password):
-            return jsonify(common.falseReturn('', '用户名和密码不能为空'))
+            return jsonify(common.falseReturn(50002, '', '用户名和密码不能为空'))
         else:
             return Auth.authenticate(Auth, username, password)
 
