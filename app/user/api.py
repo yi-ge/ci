@@ -7,10 +7,11 @@ def init_api(app):
     @app.route('/register', methods=['POST'])
     def register():
         """
-        用户注册
+        User Register
         :return: json
         """
         email = request.form.get('email')
+        phone = request.form.get('email')
         username = request.form.get('username')
         password = request.form.get('password')
         user = Users(email=email, username=username, password=Users.set_password(Users, password))
@@ -30,11 +31,12 @@ def init_api(app):
     @app.route('/login', methods=['POST'])
     def login():
         """
-        用户登录
+        User Login
         :return: json
         """
-        username = request.form.get('username')
-        password = request.form.get('password')
+        content = request.get_json(silent=True) or request.form
+        username = content['username']
+        password = content['password']
         if (not username or not password):
             return jsonify(common.falseReturn(50002, '', '用户名和密码不能为空'))
         else:
@@ -44,7 +46,7 @@ def init_api(app):
     @app.route('/user', methods=['GET'])
     def get():
         """
-        获取用户信息
+        Get User Info
         :return: json
         """
         result = Auth.identify(Auth, request)
@@ -65,28 +67,28 @@ def init_api(app):
         Dereplication
         :return: json
         """
-        content = request.get_json(silent=True)
+        content = request.get_json(silent=True) or request.form
         result = {}
         if (content['type'] == 'phone'):
             phone = content['phone']
             user = Users.query.filter_by(phone=phone).first()
             if (user is None):
-                result = common.trueReturn('', "请求成功")
+                result = common.trueReturn('', "Ok")
             else:
-                result = common.falseReturn(2, '', "手机号已存在")
+                result = common.falseReturn(2, '', "The phone is registered")
         elif (content['type'] == 'email'):
             email = content['email']
             user = Users.query.filter_by(email=email).first()
             if (user is None):
-                result = common.trueReturn('', "请求成功")
+                result = common.trueReturn('', "OK")
             else:
-                result = common.falseReturn(2, '', "Email已存在")
+                result = common.falseReturn(2, '', "The email is registered")
         elif (content['type'] == 'username'):
             username = content['username']
             user = Users.query.filter_by(username=username).first()
             if (user is None):
-                result = common.trueReturn('', "请求成功")
+                result = common.trueReturn('', "OK")
             else:
-                result = common.falseReturn(2, '', "用户名已存在")
+                result = common.falseReturn(2, '', "The username is registered")
 
         return jsonify(result)
