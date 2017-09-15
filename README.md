@@ -66,10 +66,13 @@ $ mkvirtualenv -p python3 ci
 $ pip install pipenv
 ```
 
-### Installation Dependency
+### Installation Dependency and Init Database
 
 ```
 $ pipenv install
+$ python db.py db init
+$ python db.py db migrate
+$ python db.py db upgrade
 ```
 
 ### Run Server
