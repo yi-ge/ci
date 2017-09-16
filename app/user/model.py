@@ -7,14 +7,16 @@ from app import db
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(250),  unique=True, nullable=False)
+    phone = db.Column(db.String(15),  unique=True, nullable=False)
     username = db.Column(db.String(250),  unique=True, nullable=False)
     password = db.Column(db.String(250))
     login_time = db.Column(db.Integer)
 
-    def __init__(self, username, password, email):
+    def __init__(self, username, password, email, phone):
         self.username = username
         self.password = password
         self.email = email
+        self.phone = phone
 
     def __str__(self):
         return "Users(id='%s')" % self.id

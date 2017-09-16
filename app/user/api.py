@@ -1,26 +1,44 @@
 from flask import jsonify, request
 from app.user.model import Users
 from app.auth.auths import Auth
+from sqlalchemy import or_, not_
 from .. import common
 
 def init_api(app):
-    @app.route('/register', methods=['POST'])
+    def checkPathInAuth(path):
+        noAuthDir = ['/public']
+        for i in noAuthDir:
+            if not request.path.startswith(i):
+                return False
+        return True
+
+    @app.before_request
+    def before_request():
+        if (request.method != 'OPTIONS'):
+            if(not checkPathInAuth(request.path)):
+                authResult = Auth.identify(Auth, request)
+                if (authResult['status'] != 1):
+                    return jsonify(authResult)
+
+
+    @app.route('/public/register', methods=['POST'])
     def register():
         """
         User Register
         :return: json
         """
         email = request.form.get('email')
-        phone = request.form.get('email')
+        phone = request.form.get('phone')
         username = request.form.get('username')
         password = request.form.get('password')
-        user = Users(email=email, username=username, password=Users.set_password(Users, password))
+        user = Users(email=email, phone=phone, username=username, password=Users.set_password(Users, password))
         result = Users.add(Users, user)
         if user.id:
             returnUser = {
                 'id': user.id,
                 'username': user.username,
                 'email': user.email,
+                'phone': user.phone,
                 'login_time': user.login_time
             }
             return jsonify(common.trueReturn(returnUser, "用户注册成功"))
@@ -28,7 +46,7 @@ def init_api(app):
             return jsonify(common.falseReturn(50001, '', '用户注册失败'))
 
 
-    @app.route('/login', methods=['POST'])
+    @app.route('/public/login', methods=['POST'])
     def login():
         """
         User Login
@@ -37,6 +55,7 @@ def init_api(app):
         content = request.get_json(silent=True) or request.form
         username = content['username']
         password = content['password']
+        print(username)
         if (not username or not password):
             return jsonify(common.falseReturn(50002, '', '用户名和密码不能为空'))
         else:
@@ -71,21 +90,21 @@ def init_api(app):
         result = {}
         if (content['type'] == 'phone'):
             phone = content['phone']
-            user = Users.query.filter_by(phone=phone).first()
+            user = Users.query.filter(or_(Users.phone==phone, Users.username==phone, Users.email==phone)).first()
             if (user is None):
                 result = common.trueReturn('', "Ok")
             else:
                 result = common.falseReturn(2, '', "The phone is registered")
         elif (content['type'] == 'email'):
             email = content['email']
-            user = Users.query.filter_by(email=email).first()
+            user = Users.query.filter(or_(Users.phone==email, Users.username==email, Users.email==email)).first()
             if (user is None):
                 result = common.trueReturn('', "OK")
             else:
                 result = common.falseReturn(2, '', "The email is registered")
         elif (content['type'] == 'username'):
             username = content['username']
-            user = Users.query.filter_by(username=username).first()
+            user = Users.query.filter(or_(Users.phone==username, Users.username==username, Users.email==username)).first()
             if (user is None):
                 result = common.trueReturn('', "OK")
             else:

@@ -1,18 +1,14 @@
+import os, sys
+sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from auth import Auth
 
 db = SQLAlchemy()
 
 def create_app(config_filename):
     app = Flask(__name__)
     app.config.from_object(config_filename)
-
-    @app.before_request
-    def before_request():
-        if (request.method != 'OPTIONS'):
-            print('content')
-            Auth.identify(Auth, request)
+    app.config["SQLALCHEMY_ECHO"] = True
 
     @app.after_request
     def after_request(response):

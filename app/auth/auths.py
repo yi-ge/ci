@@ -3,6 +3,7 @@ from flask import jsonify
 from app.user.model import Users
 from .. import config
 from .. import common
+from sqlalchemy import or_, not_
 
 class Auth():
     @staticmethod
@@ -58,7 +59,7 @@ class Auth():
         :param password:
         :return: json
         """
-        userInfo = Users.query.filter_by(username=username).first()
+        userInfo = Users.query.filter(or_(Users.username==username, Users.phone==username, Users.email==username)).first()
         if (userInfo is None):
             return jsonify(common.falseReturn(50003, '', 'This user does not exist.'))
         else:
@@ -69,7 +70,7 @@ class Auth():
                 token = self.encode_auth_token(userInfo.id, login_time)
                 return jsonify(common.trueReturn({'token': token.decode()}, 'Successful authentication.'))
             else:
-                return jsonify(common.falseReturn(50004, '', 'Sorry, wrong password,please login again.'))
+                return jsonify(common.falseReturn(50004, '', 'Sorry, wrong password, please login again.'))
 
     def identify(self, request):
         """
