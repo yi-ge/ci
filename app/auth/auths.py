@@ -8,7 +8,7 @@ class Auth():
     @staticmethod
     def encode_auth_token(user_id, login_time):
         """
-        生成认证Token
+        Encode token
         :param user_id: int
         :param login_time: int(timestamp)
         :return: string
@@ -34,7 +34,7 @@ class Auth():
     @staticmethod
     def decode_auth_token(auth_token):
         """
-        验证Token
+        Decode Token
         :param auth_token:
         :return: integer|string
         """
@@ -47,54 +47,54 @@ class Auth():
             else:
                 raise jwt.InvalidTokenError
         except jwt.ExpiredSignatureError:
-            return 'Token过期'
+            return 'Expire Token'
         except jwt.InvalidTokenError:
-            return '无效Token'
+            return 'Invalid Token'
 
 
     def authenticate(self, username, password):
         """
-        用户登录，登录成功返回token，写将登录时间写入数据库；登录失败返回失败原因
+        User Login Authenticate
         :param password:
         :return: json
         """
         userInfo = Users.query.filter_by(username=username).first()
         if (userInfo is None):
-            return jsonify(common.falseReturn(50003, '', '找不到用户'))
+            return jsonify(common.falseReturn(50003, '', 'This user does not exist.'))
         else:
             if (Users.check_password(Users, userInfo.password, password)):
                 login_time = int(time.time())
                 userInfo.login_time = login_time
                 Users.update(Users)
                 token = self.encode_auth_token(userInfo.id, login_time)
-                return jsonify(common.trueReturn({'token': token.decode()}, '登录成功'))
+                return jsonify(common.trueReturn({'token': token.decode()}, 'Successful authentication.'))
             else:
-                return jsonify(common.falseReturn(50004, '', '密码不正确'))
+                return jsonify(common.falseReturn(50004, '', 'Sorry, wrong password,please login again.'))
 
     def identify(self, request):
         """
-        用户鉴权
+        Identify
         :return: list
         """
         auth_header = request.headers.get('Authorization')
         if (auth_header):
             auth_tokenArr = auth_header.split(" ")
             if (not auth_tokenArr or auth_tokenArr[0] != 'Bearer' or len(auth_tokenArr) != 2):
-                result = common.falseReturn(50101, '', '请传递正确的验证头信息')
+                result = common.falseReturn(50101, '', 'Unknown authorization header.')
             else:
                 auth_token = auth_tokenArr[1]
                 payload = self.decode_auth_token(auth_token)
                 if not isinstance(payload, str):
                     user = Users.get(Users, payload['data']['id'])
                     if (user is None):
-                        result = common.falseReturn(50005, '', '找不到该用户信息')
+                        result = common.falseReturn(50005, '', 'This user does not exist.')
                     else:
                         if (user.login_time == payload['data']['login_time']):
-                            result = common.trueReturn(user.id, '请求成功')
+                            result = common.trueReturn(user.id, 'Pass Request')
                         else:
-                            result = common.falseReturn(50102, '', 'Token已更改，请重新登录获取')
+                            result = common.falseReturn(50102, '', 'Token has been changed, please request again.')
                 else:
                     result = common.falseReturn(50103, '', payload)
         else:
-            result = common.falseReturn(50104, '', '没有提供认证token')
+            result = common.falseReturn(50104, '', ' Authentication required. Token not found.')
         return result

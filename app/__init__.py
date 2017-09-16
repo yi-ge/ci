@@ -1,20 +1,18 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-# from app.auth.auths import Auth
-# from flask_cors import CORS
+from auth import Auth
 
 db = SQLAlchemy()
 
 def create_app(config_filename):
     app = Flask(__name__)
     app.config.from_object(config_filename)
-    # CORS(app)
 
     @app.before_request
     def before_request():
-        # Auth.identify(Auth, request)
-        if (request.method == 'POST' or request.method == 'DELETE' or request.method == 'PUT'):
+        if (request.method != 'OPTIONS'):
             print('content')
+            Auth.identify(Auth, request)
 
     @app.after_request
     def after_request(response):
