@@ -27,23 +27,28 @@ def init_api(app):
         User Register
         :return: json
         """
-        email = request.form.get('email')
-        phone = request.form.get('phone')
-        username = request.form.get('username')
-        password = request.form.get('password')
-        user = Users(email=email, phone=phone, username=username, password=Users.set_password(Users, password))
-        result = Users.add(Users, user)
-        if user.id:
-            returnUser = {
-                'id': user.id,
-                'username': user.username,
-                'email': user.email,
-                'phone': user.phone,
-                'login_time': user.login_time
-            }
-            return jsonify(common.trueReturn(returnUser, "用户注册成功"))
+        content = request.get_json(silent=True) or request.form
+        email = content['email']
+        phone = content['phone']
+        username = content['username']
+        password = content['password']
+        print(email, phone, username, password)
+        if (username and password and phone and email):
+            user = Users(email=email, phone=phone, username=username, password=Users.set_password(Users, password))
+            result = Users.add(Users, user)
+            if user.id:
+                returnUser = {
+                    'id': user.id,
+                    'username': user.username,
+                    'email': user.email,
+                    'phone': user.phone,
+                    'login_time': user.login_time
+                }
+                return jsonify(common.trueReturn(returnUser, "用户注册成功"))
+            else:
+                return jsonify(common.falseReturn(50001, '', '用户注册失败'))
         else:
-            return jsonify(common.falseReturn(50001, '', '用户注册失败'))
+            return jsonify(common.falseReturn(50020, '', '缺少必须参数'))
 
 
     @app.route('/public/login', methods=['POST'])
@@ -55,7 +60,6 @@ def init_api(app):
         content = request.get_json(silent=True) or request.form
         username = content['username']
         password = content['password']
-        print(username)
         if (not username or not password):
             return jsonify(common.falseReturn(50002, '', '用户名和密码不能为空'))
         else:
