@@ -75,6 +75,8 @@ $ python db.py db migrate
 $ python db.py db upgrade
 ```
 
+Delete `migrations` before `python db.py db init`.
+
 ### Run Server
 
 ```
