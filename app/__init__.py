@@ -33,6 +33,9 @@ def create_app(config_filename):
     from app.user.model import db
     db.init_app(app)
 
+    from app.auth.api import init_api
+    init_api(app)
+
     from app.user.api import init_api
     init_api(app)
 

@@ -6,11 +6,12 @@ from app.user.model import Users
 from .. import config
 from .. import common
 from sqlalchemy import or_, not_
+from app.redis import redis
 
 
 class Auth():
     @staticmethod
-    def encode_auth_token(user_id, login_time):
+    def encode_auth_token(userinfo, login_time):
         """
         Encode token
         :param user_id: int
@@ -23,7 +24,7 @@ class Auth():
                 'iat': datetime.datetime.utcnow(),
                 'iss': 'ken',
                 'data': {
-                    'id': user_id,
+                    'userinfo': jsonify(userinfo),
                     'login_time': login_time
                 }
             }
@@ -71,7 +72,13 @@ class Auth():
                 login_time = int(time.time())
                 userInfo.login_time = login_time
                 Users.update(Users)
-                token = self.encode_auth_token(userInfo.id, login_time)
+                print(userInfo.json)
+                token = self.encode_auth_token(userInfo, login_time)
+                # print(userInfo)
+                # redis.set('user_' + str(userInfo.id), jsonify({
+                #     'userinfo': jsonify(userInfo),
+                #     'login_time': login_time
+                # }), ex=3600 * 24 * 7)
                 return jsonify(common.trueReturn({'token': token.decode()}, 'Successful authentication.'))
             else:
                 return jsonify(common.falseReturn(50004, '', 'Sorry, wrong password, please login again.'))
@@ -91,16 +98,16 @@ class Auth():
                 auth_token = auth_tokenArr[1]
                 payload = self.decode_auth_token(auth_token)
                 if not isinstance(payload, str):
-                    user = Users.get(Users, payload['data']['id'])
-                    if (user is None):
-                        result = common.falseReturn(
-                            50005, '', 'This user does not exist.')
-                    else:
-                        if (user.login_time == payload['data']['login_time']):
-                            result = common.trueReturn(user.id, 'Pass Request')
+                    user = redis.get('user_' + payload['data']['userinfo']['id'])
+                    if (user):
+                        if (user.login_time == payload['data']['userinfo']['login_time']):
+                            result = common.trueReturn(user, 'Pass Request')
                         else:
                             result = common.falseReturn(
                                 50102, '', 'Token has been changed, please request again.')
+                    else:
+                        result = common.falseReturn(
+                            50005, '', 'This user does not exist.')
                 else:
                     result = common.falseReturn(50103, '', payload)
         else:
