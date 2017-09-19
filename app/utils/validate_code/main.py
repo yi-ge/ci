@@ -1,4 +1,5 @@
 # coding=utf-8
+import os
 import random
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 _letter_cases = "abcdefghjkmnpqrstuvwxy"  # 小写字母，取出干扰
@@ -14,7 +15,8 @@ def create_validate_code(size=(120, 34),
                          bg_color=(238, 238, 238),
                          fg_color=(236, 108, 8),
                          font_size=26,
-                         font_type="Arial.ttf",
+                        #  font_type="Arial.ttf",
+                         font_type=os.path.dirname(os.path.realpath(__file__)) + "/angelina.ttf",
                          length=4,
                          draw_lines=True,
                          n_line=(1, 2),

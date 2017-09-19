@@ -1,7 +1,9 @@
-#coding=utf-8
+# coding=utf-8
 import paramiko
 import requests
-import jwt, datetime, time
+import jwt
+import datetime
+import time
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from sqlalchemy import create_engine, Column, Integer, String
@@ -16,6 +18,7 @@ engine = create_engine('sqlite:///:memory:', echo=True)
 Base = declarative_base()
 SECRET_KEY = 'd21kljk21ljk2e'
 
+
 class User(Base):
     __tablename__ = 'user'
 
@@ -23,6 +26,7 @@ class User(Base):
     username = Column(String(30))
     realname = Column(String(10))
     password = Column(String(255))
+
 
 DBSession = sessionmaker(bind=engine)
 
@@ -50,6 +54,8 @@ DBSession = sessionmaker(bind=engine)
 # print(memResult.decode())
 
 # @staticmethod
+
+
 def encode_auth_token(user_id, username, login_time):
     try:
         payload = {
@@ -71,34 +77,41 @@ def encode_auth_token(user_id, username, login_time):
     except Exception as e:
         return str(e)
 
+
 def valid_login(username, password):
     return True
 
+
 @app.route('/', methods=['GET', 'POST'])
 def hello_world():
-    return jsonify({ 'status': 1 })
+    return jsonify({'status': 1})
+
 
 @app.route('/login', methods=['POST'])
 def login():
     if valid_login(request.form['username'],
-        request.form['password']):
-        token = encode_auth_token('test', request.form['username'], datetime.timedelta(seconds=10))
+                   request.form['password']):
+        token = encode_auth_token(
+            'test', request.form['username'], datetime.timedelta(seconds=10))
         print(token)
         print('开始解码')
         # print(jwt.decode(token, 'SECRET_KEY', leeway=10, algorithms=['HS256']))
         # return jsonify({ 'status': 1, 'result': { 'token': token}})
         return 'xxx'
     else:
-        return jsonify({ 'status': 403 })
+        return jsonify({'status': 403})
+
 
 def sendsms():
     response = requests.get('https://httpbin.org/ip')
     print('Your IP is {0}'.format(response.json()['origin']))
 
+
 @app.errorhandler(404)
 def bad_request(e):
-    return jsonify({ 'status': 404 }), 404
+    return jsonify({'status': 404}), 404
+
 
 @app.errorhandler(500)
 def bad_request(e):
-    return jsonify({ 'status': 500 }), 500
+    return jsonify({'status': 500}), 500

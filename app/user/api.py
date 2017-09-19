@@ -4,11 +4,11 @@ from app.auth.auths import Auth
 from sqlalchemy import or_, not_
 from .. import common
 from io import BytesIO, StringIO
-from app.user.validate_code import create_validate_code
+from app.utils.validate_code.main import create_validate_code
 from app.redis import r
-import os
 
 validata_code = StringIO()
+
 
 def init_api(app):
     def checkPathInAuth(path):
@@ -26,7 +26,6 @@ def init_api(app):
                 if (authResult['status'] != 1):
                     return jsonify(authResult)
 
-
     @app.route('/public/register', methods=['POST'])
     def register():
         """
@@ -41,11 +40,14 @@ def init_api(app):
         verfiycode = content['verfiycode']
         code = content['code']
         if (not code or not verficode):
-            return jsonify(common.falseReturn(50100, '', 'Please input identifying code'))
-        if (str(r.get('verfiy_' + code), encoding = "utf8").lower() != verfiycode.lower()):
-            return jsonify(common.falseReturn(50101, '', 'Identifying code error or time out'))
+            return jsonify(common.falseReturn(50100, '',
+                                              'Please input identifying code'))
+        if (str(r.get('verfiy_' + code), encoding="utf8").lower() != verfiycode.lower()):
+            return jsonify(common.falseReturn(50101, '',
+                                              'Identifying code error or time out'))
         if (username and password and phone and email):
-            user = Users(email=email, phone=phone, username=username, password=Users.set_password(Users, password))
+            user = Users(email=email, phone=phone, username=username,
+                         password=Users.set_password(Users, password))
             result = Users.add(Users, user)
             if user.id:
                 return Auth.authenticate(Auth, username, password)
@@ -66,13 +68,19 @@ def init_api(app):
         verfiycode = content['verfiycode']
         code = content['code']
         if (not code or not verficode):
-            return jsonify(common.falseReturn(50100, '', 'Please input identifying code'))
-        if (str(r.get('verfiy_' + code), encoding = "utf8").lower() != verfiycode.lower()):
-            return jsonify(common.falseReturn(50101, '', 'Identifying code error or time out'))
+            return jsonify(common.falseReturn(50100, '',
+                                              'Please input identifying code'))
+        if (str(r.get('verfiy_' + code), encoding="utf8").lower() != verfiycode.lower()):
+            return jsonify(common.falseReturn(50101, '',
+                                              'Identifying code error or time out'))
         if (not username or not password):
-            return jsonify(common.falseReturn(50002, '', 'Username and password cannot be empty'))
+            return jsonify(common.falseReturn(50002, '',
+                                              'Username and password cannot be empty'))
         else:
-            return Auth.authenticate(Auth, username, password)
+            authResult = Auth.authenticate(Auth, username, password)
+            if (authResult['status'] == 1):
+                r.set('user_' + code, authResult['result']['token'], ex=60)
+            return jsonify(authResult)
 
     @app.route('/logout', methods=['POST'])
     def logout():
@@ -82,7 +90,7 @@ def init_api(app):
         """
         content = request.get_json(silent=True) or request.form
         username = content['username']
-        if (str(r.get('verfiy_' + code), encoding = "utf8").lower() != verfiycode.lower()):
+        if (str(r.get('verfiy_' + code), encoding="utf8").lower() != verfiycode.lower()):
             return jsonify(common.falseReturn(50101, '', 'Identifying code error or time out'))
         if (not username):
             return jsonify(common.falseReturn(50002, '', 'Username and password cannot be empty'))
@@ -95,28 +103,21 @@ def init_api(app):
         Verfiy Code
         :return: image/JPEG
         """
-        # codenum = 4
-        # source = list()
-        # for index in range(0, 10):
-        #     source.append(str(index))
-        # code = ''.join(random.sample(source, 4))
-        image = create_validate_code(font_type=os.path.dirname(os.path.realpath(__file__)) + "/angelina.ttf")
+        image = create_validate_code()
         code = request.args.get('code')
         if (code):
             r.set('verfiy_' + code, image[1], ex=60)
         res = Response()
         output = BytesIO()
-        print(image[1])
-        image[0].save(output, 'JPEG', quality = 95)
+        image[0].save(output, 'JPEG', quality=95)
         img_data = output.getvalue()
         res.headers.set("Content-Type", "image/JPEG;charset=UTF-8")
         res.set_data(img_data)
         output.close()
         return res
 
-
-    @app.route('/user', methods=['GET'])
-    def get():
+    @app.route('/userinfo', methods=['POST'])
+    def userinfo():
         """
         Get User Info
         :return: json
@@ -142,10 +143,12 @@ def init_api(app):
         content = request.get_json(silent=True) or request.form
         result = {}
         value = content['value']
-        user = Users.query.filter(or_(Users.phone==value, Users.username==value, Users.email==value)).first()
+        user = Users.query.filter(
+            or_(Users.phone == value, Users.username == value, Users.email == value)).first()
         if (user is None):
             result = common.trueReturn('', "OK")
         else:
-            result = common.falseReturn(2, '', "The " + content['type'] + " is registered")
+            result = common.falseReturn(
+                2, '', "The " + content['type'] + " is registered")
 
         return jsonify(result)

@@ -1,9 +1,12 @@
-import jwt, datetime, time
+import jwt
+import datetime
+import time
 from flask import jsonify
 from app.user.model import Users
 from .. import config
 from .. import common
 from sqlalchemy import or_, not_
+
 
 class Auth():
     @staticmethod
@@ -42,7 +45,8 @@ class Auth():
         try:
             # payload = jwt.decode(auth_token, app.config.get('SECRET_KEY'), leeway=datetime.timedelta(seconds=10))
             # 取消过期时间验证
-            payload = jwt.decode(auth_token, config.SECRET_KEY, options={'verify_exp': False})
+            payload = jwt.decode(auth_token, config.SECRET_KEY, options={
+                                 'verify_exp': False})
             if ('data' in payload and 'id' in payload['data']):
                 return payload
             else:
@@ -52,14 +56,14 @@ class Auth():
         except jwt.InvalidTokenError:
             return 'Invalid Token'
 
-
     def authenticate(self, username, password):
         """
         User Login Authenticate
         :param password:
         :return: json
         """
-        userInfo = Users.query.filter(or_(Users.username==username, Users.phone==username, Users.email==username)).first()
+        userInfo = Users.query.filter(or_(
+            Users.username == username, Users.phone == username, Users.email == username)).first()
         if (userInfo is None):
             return jsonify(common.falseReturn(50003, '', 'This user does not exist.'))
         else:
@@ -81,21 +85,25 @@ class Auth():
         if (auth_header):
             auth_tokenArr = auth_header.split(" ")
             if (not auth_tokenArr or auth_tokenArr[0] != 'Bearer' or len(auth_tokenArr) != 2):
-                result = common.falseReturn(50101, '', 'Unknown authorization header.')
+                result = common.falseReturn(
+                    50101, '', 'Unknown authorization header.')
             else:
                 auth_token = auth_tokenArr[1]
                 payload = self.decode_auth_token(auth_token)
                 if not isinstance(payload, str):
                     user = Users.get(Users, payload['data']['id'])
                     if (user is None):
-                        result = common.falseReturn(50005, '', 'This user does not exist.')
+                        result = common.falseReturn(
+                            50005, '', 'This user does not exist.')
                     else:
                         if (user.login_time == payload['data']['login_time']):
                             result = common.trueReturn(user.id, 'Pass Request')
                         else:
-                            result = common.falseReturn(50102, '', 'Token has been changed, please request again.')
+                            result = common.falseReturn(
+                                50102, '', 'Token has been changed, please request again.')
                 else:
                     result = common.falseReturn(50103, '', payload)
         else:
-            result = common.falseReturn(50104, '', ' Authentication required. Token not found.')
+            result = common.falseReturn(
+                50104, '', ' Authentication required. Token not found.')
         return result
