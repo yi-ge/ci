@@ -72,7 +72,8 @@ class Auth():
                 login_time = int(time.time())
                 userInfo.login_time = login_time
                 Users.update(Users)
-                print(userInfo.json)
+                UnReadMsg = userInfo
+                print(UnReadMsg.__dict__)
                 token = self.encode_auth_token(userInfo, login_time)
                 # print(userInfo)
                 # redis.set('user_' + str(userInfo.id), jsonify({
