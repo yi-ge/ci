@@ -90,9 +90,9 @@ def init_api(app):
         User Logout (Initiative)
         :return: json
         """
-        print(request.user)
-        print(request.user.userinfo.id)
-        redis.delete('user_' + request.user.userinfo.id)
+        print(request.user.__dict__)
+        print(request.user['userinfo'])
+        # redis.delete('user_' + request.user.userinfo.id)
         return jsonify(common.trueReturn('ok', 'Logouted'))
 
     @app.route('/public/auth/verfiycode', methods=['GET'])

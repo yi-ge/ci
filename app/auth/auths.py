@@ -22,7 +22,7 @@ class Auth():
         """
         try:
             payload = {
-                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=3, seconds=10),
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=3),
                 'iat': datetime.datetime.utcnow(),
                 'iss': 'ken',
                 'data': {
@@ -50,7 +50,7 @@ class Auth():
             # 过期时间验证
             payload = jwt.decode(auth_token, config.SECRET_KEY, options={
                                  'verify_exp': True})
-            if ('data' in payload and 'id' in payload['data']):
+            if ('data' in payload):
                 return payload
             else:
                 raise jwt.InvalidTokenError
@@ -75,8 +75,9 @@ class Auth():
                 userInfo.login_time = login_time
                 Users.update(Users)
                 userinfo = Serializer.serialize(userInfo)
+                del userinfo['password']
                 token = self.encode_auth_token(userinfo, login_time)
-                redis.set('user_' + str(userInfo.id), jsonify({
+                redis.set('user_' + str(userInfo.id), json.dumps({
                     'userinfo': userinfo,
                     'login_time': login_time
                 }), ex=3600 * 24 * 7)
@@ -99,10 +100,9 @@ class Auth():
                 auth_token = auth_tokenArr[1]
                 payload = self.decode_auth_token(auth_token)
                 if not isinstance(payload, str):
-                    user = redis.get(
-                        'user_' + payload['data']['userinfo']['id'])
+                    user = json.loads(str(redis.get('user_' + str(payload['data']['userinfo']['id'])), encoding="utf-8"))
                     if (user):
-                        if (user.login_time == payload['data']['userinfo']['login_time']):
+                        if (user['login_time'] == payload['data']['userinfo']['login_time']):
                             result = common.trueReturn(user, 'Pass Request')
                         else:
                             result = common.falseReturn(
