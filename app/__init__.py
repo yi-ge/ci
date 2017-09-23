@@ -1,9 +1,11 @@
-import os, sys
+import os
+import sys
 sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
+
 
 def create_app(config_filename):
     app = Flask(__name__)
@@ -33,10 +35,16 @@ def create_app(config_filename):
     from app.user.model import db
     db.init_app(app)
 
+    from app.server.model import db
+    db.init_app(app)
+
     from app.auth.api import init_api
     init_api(app)
 
     from app.user.api import init_api
+    init_api(app)
+
+    from app.server.api import init_api
     init_api(app)
 
     return app

@@ -2,7 +2,7 @@ import jwt
 import datetime
 import time
 from flask import jsonify
-from app.user.model import Users
+from app.user.model import User
 from .. import config
 from .. import common
 from sqlalchemy import or_, not_
@@ -65,15 +65,15 @@ class Auth():
         :param password:
         :return: json
         """
-        userInfo = Users.query.filter(or_(
-            Users.username == username, Users.phone == username, Users.email == username)).first()
+        userInfo = User.query.filter(or_(
+            User.username == username, User.phone == username, User.email == username)).first()
         if (userInfo is None):
             return jsonify(common.falseReturn(50003, '', 'This user does not exist.'))
         else:
-            if (Users.check_password(Users, userInfo.password, password)):
+            if (User.check_password(User, userInfo.password, password)):
                 login_time = int(time.time())
                 userInfo.login_time = login_time
-                Users.update(Users)
+                User.update(User)
                 userinfo = Serializer.serialize(userInfo)
                 del userinfo['password']
                 token = self.encode_auth_token(userinfo, login_time)

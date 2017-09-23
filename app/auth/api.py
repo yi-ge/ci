@@ -1,5 +1,5 @@
 from flask import jsonify, request, Response
-from app.user.model import Users
+from app.user.model import User
 from app.auth.auths import Auth
 from sqlalchemy import or_, not_
 from .. import common
@@ -51,9 +51,9 @@ def init_api(app):
             return jsonify(common.falseReturn(50101, '',
                                               'Identifying code error or time out'))
         if (username and password and phone and email):
-            user = Users(email=email, phone=phone, username=username,
-                         password=Users.set_password(Users, password))
-            result = Users.add(Users, user)
+            user = User(email=email, phone=phone, username=username,
+                         password=User.set_password(User, password))
+            result = User.add(User, user)
             if user.id:
                 return Auth.authenticate(Auth, username, password)
             else:
