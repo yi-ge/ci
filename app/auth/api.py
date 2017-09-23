@@ -29,7 +29,7 @@ def init_api(app):
                 if (authResult['status'] != 1):
                     return jsonify(authResult)
                 else:
-                    request.user = authResult
+                    request.user = authResult['result']['data']
 
     @app.route('/public/auth/register', methods=['POST'])
     def register():
@@ -90,9 +90,8 @@ def init_api(app):
         User Logout (Initiative)
         :return: json
         """
-        print(request.user.__dict__)
-        print(request.user['userinfo'])
-        # redis.delete('user_' + request.user.userinfo.id)
+
+        redis.delete('user_' + str(request.user['userinfo']['id']))
         return jsonify(common.trueReturn('ok', 'Logouted'))
 
     @app.route('/public/auth/verfiycode', methods=['GET'])

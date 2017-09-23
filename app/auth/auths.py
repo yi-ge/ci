@@ -100,16 +100,20 @@ class Auth():
                 auth_token = auth_tokenArr[1]
                 payload = self.decode_auth_token(auth_token)
                 if not isinstance(payload, str):
-                    user = json.loads(str(redis.get('user_' + str(payload['data']['userinfo']['id'])), encoding="utf-8"))
-                    if (user):
-                        if (user['login_time'] == payload['data']['userinfo']['login_time']):
-                            result = common.trueReturn(user, 'Pass Request')
+                    if redis.get('user_' + str(payload['data']['userinfo']['id'])):
+                        user = json.loads(str(redis.get('user_' + str(payload['data']['userinfo']['id'])), encoding="utf-8"))
+                        if (user):
+                            if (user['login_time'] == payload['data']['userinfo']['login_time']):
+                                result = common.trueReturn(user, 'Pass Request')
+                            else:
+                                result = common.falseReturn(
+                                    50102, '', 'Token has been changed, please request again.')
                         else:
                             result = common.falseReturn(
-                                50102, '', 'Token has been changed, please request again.')
+                                50005, '', 'This user does not exist.')
                     else:
                         result = common.falseReturn(
-                            50005, '', 'This user does not exist.')
+                            50006, '', 'This user may have logouted.')
                 else:
                     result = common.falseReturn(50103, '', payload)
         else:
