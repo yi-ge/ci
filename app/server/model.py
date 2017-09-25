@@ -20,7 +20,7 @@ class Server(db.Model):
         self.phone = phone
 
     def __str__(self):
-        return "User(id='%s')" % self.id
+        return "Server(id='%s')" % self.id
 
     def set_password(self, password):
         return generate_password_hash(password)

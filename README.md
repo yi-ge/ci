@@ -1,8 +1,7 @@
 Continuous Integration System
 =============================
 
-This is a basic continuous integration server, designed for GitHub and GitLab.  
-The program use together with https://github.com/yi-ge/ci-web or http://git.oschina.net/mgenius/ci-web.
+This is a basic continuous integration server, designed for GitHub and GitLab.<br> The program use together with https://github.com/yi-ge/ci-web or http://git.oschina.net/mgenius/ci-web.
 
 Python Versions
 ---------------
@@ -20,7 +19,7 @@ To install globally with pip (if you have pip 1.3 or greater installed globally)
 $ [sudo] pip install virtualenv virtualenvwrapper
 ```
 
-It will probably install virtualenv on your system. Maybe it’s even in your package manager.
+It will probably install virtualenv on your system. Maybe it's even in your package manager.
 
 If you use Ubuntu, try:
 
