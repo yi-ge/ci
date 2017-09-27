@@ -52,7 +52,7 @@ def init_api(app):
                                               'Identifying code error or time out'))
         if (username and password and phone and email):
             user = User(email=email, phone=phone, username=username,
-                         password=User.set_password(User, password))
+                        password=User.set_password(User, password))
             result = User.add(User, user)
             if user.id:
                 return Auth.authenticate(Auth, username, password)
@@ -112,3 +112,21 @@ def init_api(app):
         res.set_data(img_data)
         output.close()
         return res
+
+    @app.route('/public/auth/loginCheck', methods=['GET'])
+    def loginCheck():
+        """
+        loginCheck
+        :return: json
+        """
+        try:
+            redis.set('check', 'redis', ex=60)
+        except Exception as e:
+            return jsonify(common.falseReturn(51100, '',
+                                              'Redis error.'))
+
+        if str(redis.get('check'), encoding="utf8") == "redis":
+            return jsonify(common.trueReturn('ok', 'Pass'))
+        else:
+            return jsonify(common.falseReturn(51100, '',
+                                              'Server error.'))
