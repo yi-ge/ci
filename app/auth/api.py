@@ -127,6 +127,5 @@ def init_api(app):
 
         if str(redis.get('check'), encoding="utf8") == "redis":
             return jsonify(common.trueReturn('ok', 'Pass'))
-        else:
-            return jsonify(common.falseReturn(51100, '',
-                                              'Server error.'))
+
+        return jsonify(common.falseReturn(51100, '', 'Server error.'))
