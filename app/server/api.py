@@ -12,13 +12,13 @@ validata_code = StringIO()
 
 def init_api(app):
 
-    @app.route('/server/list', methods=['POST'])
+    @app.route('/server/list', methods=['GET', 'POST'])
     def test():
         """
         Get Server List
         :return: json
         """
-        result = common.trueReturn(request.user, "请求成功")
+        result = common.trueReturn(Server.query.all(), "请求成功")
         return jsonify(result)
 
     @app.route('/server/add', methods=['POST'])
@@ -39,7 +39,7 @@ def init_api(app):
             server = Server(name=name, ip=ip, auth=auth, sshkey=sshkey, password=password, address=address, note=note)
             result = Server.add(Server, server)
             if server.id:
-                return common.trueReturn(request.user, "Save Ok")
+                return jsonify(common.trueReturn(request.user, "Save Ok"))
             else:
                 return jsonify(common.falseReturn(50001, '', 'Fail'))
         else:
