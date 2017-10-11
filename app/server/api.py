@@ -20,3 +20,33 @@ def init_api(app):
         """
         result = common.trueReturn(request.user, "请求成功")
         return jsonify(result)
+
+    @app.route('/server/add', methods=['POST'])
+    def register():
+        """
+        User Register
+        :return: json
+        """
+        content = request.get_json(silent=True) or request.form
+        email = content['email']
+        phone = content['phone']
+        username = content['username']
+        password = content['password']
+        verfiycode = content['verfiycode']
+        code = content['code']
+        if (not code or not verficode):
+            return jsonify(common.falseReturn(50100, '',
+                                              'Please input identifying code'))
+        if (str(redis.get('verfiy_' + code), encoding="utf8").lower() != verfiycode.lower()):
+            return jsonify(common.falseReturn(50101, '',
+                                              'Identifying code error or time out'))
+        if (username and password and phone and email):
+            user = User(email=email, phone=phone, username=username,
+                        password=User.set_password(User, password))
+            result = User.add(User, user)
+            if user.id:
+                return Auth.authenticate(Auth, username, password)
+            else:
+                return jsonify(common.falseReturn(50001, '', '用户注册失败'))
+        else:
+            return jsonify(common.falseReturn(50020, '', '缺少必须参数'))
