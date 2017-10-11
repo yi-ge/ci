@@ -28,25 +28,19 @@ def init_api(app):
         :return: json
         """
         content = request.get_json(silent=True) or request.form
-        email = content['email']
-        phone = content['phone']
-        username = content['username']
+        name = content['name']
+        ip = content['ip']
+        auth = content['auth']
+        sshkey = content['sshkey']
         password = content['password']
-        verfiycode = content['verfiycode']
-        code = content['code']
-        if (not code or not verficode):
-            return jsonify(common.falseReturn(50100, '',
-                                              'Please input identifying code'))
-        if (str(redis.get('verfiy_' + code), encoding="utf8").lower() != verfiycode.lower()):
-            return jsonify(common.falseReturn(50101, '',
-                                              'Identifying code error or time out'))
-        if (username and password and phone and email):
-            user = User(email=email, phone=phone, username=username,
-                        password=User.set_password(User, password))
-            result = User.add(User, user)
-            if user.id:
-                return Auth.authenticate(Auth, username, password)
+        address = content['address']
+        note = content['note']
+        if (name and ip and auth):
+            server = Server(name=name, ip=ip, auth=auth, sshkey=sshkey, password=password, address=address, note=note)
+            result = Server.add(Server, server)
+            if server.id:
+                return common.trueReturn(request.user, "Save Ok")
             else:
-                return jsonify(common.falseReturn(50001, '', '用户注册失败'))
+                return jsonify(common.falseReturn(50001, '', 'Fail'))
         else:
-            return jsonify(common.falseReturn(50020, '', '缺少必须参数'))
+            return jsonify(common.falseReturn(50020, '', 'The parameters are necessary.'))
