@@ -6,6 +6,7 @@ from .. import common
 from io import BytesIO, StringIO
 from app.utils.validate_code.main import create_validate_code
 from app.redis import redis
+from app.utils.serializer.sqlalchemy_json import Serializer
 
 validata_code = StringIO()
 
@@ -18,7 +19,13 @@ def init_api(app):
         Get Server List
         :return: json
         """
-        result = common.trueReturn(Server.query.all(), "请求成功")
+        servers = Server.query.all()
+
+        lists = []
+        for server in servers:
+            lists.append(Serializer.serialize(server))
+
+        result = common.trueReturn(lists, "请求成功")
         return jsonify(result)
 
     @app.route('/server/add', methods=['POST'])
@@ -35,8 +42,9 @@ def init_api(app):
         password = content['password']
         address = content['address']
         note = content['note']
-        if (name and ip and auth):
-            server = Server(name=name, ip=ip, auth=auth, sshkey=sshkey, password=password, address=address, note=note)
+        status = content['status']
+        if (name and ip and auth and status):
+            server = Server(name=name, ip=ip, auth=auth, sshkey=sshkey, password=password, address=address, note=note, status=status)
             result = Server.add(Server, server)
             if server.id:
                 return jsonify(common.trueReturn(request.user, "Save Ok"))

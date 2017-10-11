@@ -14,8 +14,9 @@ class Server(db.Model):
     password = db.Column(db.String(120), nullable=True)
     address = db.Column(db.String(250), nullable=True)
     note = db.Column(db.Text, nullable=True)
+    status = db.Column(db.String(250), nullable=True)
 
-    def __init__(self, name, ip, auth, sshkey, password, address, note):
+    def __init__(self, name, ip, auth, sshkey, password, address, note, status):
         self.name = name
         self.ip = ip
         self.auth = auth
@@ -23,6 +24,7 @@ class Server(db.Model):
         self.password = password
         self.address = address
         self.note = note
+        self.status = status
 
     def __str__(self):
         return "Server(id='%s')" % self.id
