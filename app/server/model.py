@@ -7,13 +7,15 @@ from app import db
 
 class Server(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(250),  unique=True, nullable=False)
     ip = db.Column(db.String(250),  unique=True, nullable=False)
     auth = db.Column(db.String(15),  unique=True, nullable=False)
     sshkey = db.Column(db.String(2096),  unique=True, nullable=False)
     password = db.Column(db.String(250))
     note = db.Column(db.Text)
 
-    def __init__(self, ip, auth, sshkey, password, note):
+    def __init__(self, name, ip, auth, sshkey, password, note):
+        self.name = name
         self.ip = ip
         self.auth = auth
         self.sshkey = sshkey

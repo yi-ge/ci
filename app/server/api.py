@@ -22,7 +22,7 @@ def init_api(app):
         return jsonify(result)
 
     @app.route('/server/add', methods=['POST'])
-    def register():
+    def addServer():
         """
         User Register
         :return: json
