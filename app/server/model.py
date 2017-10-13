@@ -15,8 +15,9 @@ class Server(db.Model):
     address = db.Column(db.String(250), nullable=True)
     note = db.Column(db.Text, nullable=True)
     status = db.Column(db.String(250), nullable=True)
+    type = db.Column(db.String(10), nullable=True)
 
-    def __init__(self, name, ip, auth, sshkey, password, address, note, status):
+    def __init__(self, name, ip, auth, sshkey, password, address, note, status, type):
         self.name = name
         self.ip = ip
         self.auth = auth
@@ -25,12 +26,13 @@ class Server(db.Model):
         self.address = address
         self.note = note
         self.status = status
+        self.type = type
 
     def __str__(self):
         return "Server(id='%s')" % self.id
 
     def get(self, id):
-        return self.query.filter_by(id=id).first()
+        return self.query.filter_by(id=id, type='1').first()
 
     def add(self, server):
         db.session.add(server)
@@ -40,7 +42,8 @@ class Server(db.Model):
         return session_commit()
 
     def delete(self, id):
-        self.query.filter_by(id=id).delete()
+        self.query.filter(id=id).update({type: '4'})  # 伪删除
+        # self.query.filter_by(id=id).delete()
         return session_commit()
 
 

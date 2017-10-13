@@ -19,7 +19,7 @@ def init_api(app):
         Get Server List
         :return: json
         """
-        servers = Server.query.all()
+        servers = Server.query.filter_by(type='1').all()
 
         lists = []
         for server in servers:
@@ -31,7 +31,7 @@ def init_api(app):
     @app.route('/server/add', methods=['POST'])
     def addServer():
         """
-        User Register
+        Server Add
         :return: json
         """
         content = request.get_json(silent=True) or request.form
@@ -44,8 +44,26 @@ def init_api(app):
         note = content['note']
         status = content['status']
         if (name and ip and auth and status):
-            server = Server(name=name, ip=ip, auth=auth, sshkey=sshkey, password=password, address=address, note=note, status=status)
+            server = Server(name=name, ip=ip, auth=auth, sshkey=sshkey, password=password, address=address, note=note, status=status, type='1')
             result = Server.add(Server, server)
+            if server.id:
+                return jsonify(common.trueReturn(request.user, "Save Ok"))
+            else:
+                return jsonify(common.falseReturn(50001, '', 'Fail'))
+        else:
+            return jsonify(common.falseReturn(50020, '', 'The parameters are necessary.'))
+
+    @app.route('/server/del', methods=['POST'])
+    def delServer():
+        """
+        Server Delete
+        :return: json
+        """
+        content = request.get_json(silent=True) or request.form
+        id = content['id']
+        if id:
+            result = Server.delete(Server, id)
+            print(result)
             if server.id:
                 return jsonify(common.trueReturn(request.user, "Save Ok"))
             else:
