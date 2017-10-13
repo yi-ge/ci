@@ -14,7 +14,7 @@ class Server(db.Model):
     password = db.Column(db.String(120), nullable=True)
     address = db.Column(db.String(250), nullable=True)
     note = db.Column(db.Text, nullable=True)
-    status = db.Column(db.String(250), nullable=True, nullable=False)
+    status = db.Column(db.String(250), nullable=True)
 
     def __init__(self, name, ip, auth, sshkey, password, address, note, status):
         self.name = name
