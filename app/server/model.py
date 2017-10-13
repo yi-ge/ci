@@ -42,7 +42,7 @@ class Server(db.Model):
         return session_commit()
 
     def delete(self, id):
-        self.query.filter(id=id).update({type: '4'})  # 伪删除
+        self.query.filter_by(id=id).update({'type': '4'})  # 伪删除
         # self.query.filter_by(id=id).delete()
         return session_commit()
 

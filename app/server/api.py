@@ -62,11 +62,7 @@ def init_api(app):
         content = request.get_json(silent=True) or request.form
         id = content['id']
         if id:
-            result = Server.delete(Server, id)
-            print(result)
-            if server.id:
-                return jsonify(common.trueReturn(request.user, "Save Ok"))
-            else:
-                return jsonify(common.falseReturn(50001, '', 'Fail'))
+            Server.delete(Server, id)
+            return jsonify(common.trueReturn('ok', "Save Ok"))
         else:
             return jsonify(common.falseReturn(50020, '', 'The parameters are necessary.'))
