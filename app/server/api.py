@@ -25,7 +25,10 @@ def init_api(app):
         for server in servers:
             lists.append(Serializer.serialize(server))
 
-        result = common.trueReturn(lists, "请求成功")
+        status = Server.query.filter_by(type='1').group_by('status')
+        print(status)
+
+        result = common.trueReturn({lists: lists, status: status}, "请求成功")
         return jsonify(result)
 
     @app.route('/server/add', methods=['POST'])
