@@ -4,7 +4,7 @@ DB_HOST = 'localhost'
 DB_DB = 'ci'
 
 DEBUG = True
-PORT = 5000
+PORT = 5001
 HOST = "0"
 SECRET_KEY = "test"
 
