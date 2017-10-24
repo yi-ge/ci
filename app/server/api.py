@@ -1,12 +1,13 @@
 from flask import jsonify, request, Response
 from app.server.model import Server
 from app.auth.auths import Auth
-from sqlalchemy import or_, not_
+from sqlalchemy import or_, not_, func
 from .. import common
 from io import BytesIO, StringIO
 from app.utils.validate_code.main import create_validate_code
 from app.redis import redis
 from app.utils.serializer.sqlalchemy_json import Serializer
+from app import db
 
 validata_code = StringIO()
 
@@ -25,10 +26,9 @@ def init_api(app):
         for server in servers:
             lists.append(Serializer.serialize(server))
 
-        status = Server.query.filter_by(type='1').group_by('status')
-        print(status)
+        status = db.session.query(Server.status, func.count(Server.status)).filter(Server.type == '1').group_by(Server.status).all()
 
-        result = common.trueReturn({lists: lists, status: status}, "请求成功")
+        result = common.trueReturn({"lists": lists, "status": status}, "请求成功")
         return jsonify(result)
 
     @app.route('/server/add', methods=['POST'])
