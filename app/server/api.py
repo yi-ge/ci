@@ -69,3 +69,31 @@ def init_api(app):
             return jsonify(common.trueReturn('ok', "Save Ok"))
         else:
             return jsonify(common.falseReturn(50020, '', 'The parameters are necessary.'))
+
+    @app.route('/server/ping', methods=['GET'])
+    def getPing():
+        """
+        Server Delete
+        :return: json
+        """
+        content = request.get_json(silent=True) or request.form
+        id = content['id']
+        if id:
+            Server.delete(Server, id)
+            return jsonify(common.trueReturn('ok', "Save Ok"))
+        else:
+            return jsonify(common.falseReturn(50020, '', 'The parameters are necessary.'))
+
+    @app.route('/server/ping', methods=['PUT'])
+    def putPing():
+        """
+        Server Delete
+        :return: json
+        """
+        content = request.get_json(silent=True) or request.form
+        id = content['id']
+        if id:
+            Server.delete(Server, id)
+            return jsonify(common.trueReturn('ok', "Save Ok"))
+        else:
+            return jsonify(common.falseReturn(50020, '', 'The parameters are necessary.'))
