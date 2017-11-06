@@ -1,7 +1,7 @@
 Continuous Integration System
 =============================
 
-This is a basic continuous integration server, designed for GitHub and GitLab.<br> The program use together with https://github.com/yi-ge/ci-web or http://git.oschina.net/mgenius/ci-web.
+This is a basic continuous integration server, designed for GitHub and GitLab.<br> The program use together with https://github.com/yi-ge/ci-web or http://git.oschina.net/yi-ge/ci-web.
 
 Python Versions
 ---------------
