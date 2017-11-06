@@ -44,7 +44,7 @@ After editing it, reload the startup file (e.g., run `source ~/.bashrc`).
 workon # list virtual environment
 workon XXX # enter virtual environment
 mkvirtualenv XXX # set up virtual environment
-deactivate XXX # leave virtual environment
+deactivate # leave virtual environment
 rmvirtualenv XXX # delete virtual environment
 ```
 
