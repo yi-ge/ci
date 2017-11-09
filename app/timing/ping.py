@@ -7,9 +7,8 @@ scheduler = BlockingScheduler()
 
 def init_timing(app):
 
-    @scheduler.scheduled_job('interval', seconds=5)
-    def tick():
-        print('Tick! The time is: %s' % datetime.now())
-        os.system("ls -al | grep \"log1\" ")
-
+    # @scheduler.scheduled_job('interval', seconds=5)
+    # def tick():
+    #     print('Tick! The time is: %s' % datetime.now())
+    #
     scheduler.start()
